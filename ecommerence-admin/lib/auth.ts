@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { db } from './db';
 import { compare } from 'bcrypt';
+import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -14,6 +15,10 @@ export const authOptions: NextAuthOptions = {
     signIn: '/sign-in',
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
+    }),
     CredentialsProvider({
       name: 'Credentials',
 
@@ -37,16 +42,16 @@ export const authOptions: NextAuthOptions = {
         if (!existingUser) {
           return null;
         }
+        if (existingUser.password) {
+          const passwordMatch = await compare(
+            credentials.password,
+            existingUser.password
+          );
 
-        const passwordMatch = await compare(
-          credentials.password,
-          existingUser.password
-        );
-
-        if (!passwordMatch) {
-          return null;
+          if (!passwordMatch) {
+            return null;
+          }
         }
-
         return {
           id: `${existingUser.id}`,
           username: existingUser.username,
@@ -57,7 +62,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
- 
       if (user) {
         return {
           ...token,

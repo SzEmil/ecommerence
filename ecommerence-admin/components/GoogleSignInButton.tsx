@@ -1,13 +1,14 @@
 import { FC, ReactNode } from 'react';
 import { Button } from './ui/button';
 import { FcGoogle } from 'react-icons/fc';
+import { signIn } from 'next-auth/react';
 
 type GoogleSignInButtonProps = {
   children: ReactNode;
 };
 const GoogleSignInButton: FC<GoogleSignInButtonProps> = ({ children }) => {
   const loginWithGoogle = () => {
-    console.log('login with google');
+    signIn('google', { callbackUrl: `${window.location.origin}/admin` });
   };
 
   return (
