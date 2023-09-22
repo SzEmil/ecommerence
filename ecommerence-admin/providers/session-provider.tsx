@@ -5,8 +5,8 @@ import { FC, ReactNode } from 'react';
 type providerProps = {
   children: ReactNode;
 };
-const Provider: FC<providerProps> = ({ children }) => {
+const ProviderSession: FC<providerProps> = ({ children }) => {
   return <SessionProvider>{children}</SessionProvider>;
 };
 
-export default Provider;
+export default ProviderSession;

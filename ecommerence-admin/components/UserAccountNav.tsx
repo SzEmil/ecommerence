@@ -5,8 +5,15 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { BiSolidUserCircle } from 'react-icons/bi';
-const UserAccountNav = () => {
-  const { data: session } = useSession();
+
+interface UserNavProps {
+  user: {
+    image?: string | null | undefined;
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+  };
+}
+const UserAccountNav = ({ user }: UserNavProps) => {
 
   return (
     <div className="flex gap-2">
@@ -21,10 +28,10 @@ const UserAccountNav = () => {
       >
         Sign Out
       </Button>
-      {session?.user.image ? (
+      {user.image ? (
         <Image
           className="rounded-sm"
-          src={session.user.image}
+          src={user.image}
           width={36}
           height={36}
           alt="user image"
